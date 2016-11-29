@@ -1,0 +1,206 @@
+#subtitle {
+	font-family: Garamond; 
+	font-size:20px;
+	font-style:regular;
+	letter-spacing:4.5px;
+	color:#212121;
+	line-height:1.45;
+	padding:0px;
+	margin-top:0px;
+	margin-bottom:0px;
+}
+
+#subtitlepro {
+	font-family: Garamond; 
+	font-size:20px;
+	font-style:regular;
+	letter-spacing:4.5px;
+	color:#212121;
+	line-height:1.45;
+	padding:0px;
+	padding-right:2.5%;
+	margin-top:0px;
+	margin-bottom:0px;
+}
+
+h1 {
+	font-family: MS Reference Sans Serif;
+	font-weight:bold;
+	font-size:30px;
+	font-style:regular;
+	color:#212121;
+	line-height:1.45;
+	padding:0px;
+	margin-top:5px;
+	margin-bottom:0px;
+}
+
+h1.project {
+	font-family: MS Reference Sans Serif;
+	font-weight:bold;
+	font-size:40px;
+	font-style:regular;
+	color:#212121;
+	line-height:1.45;
+	padding:0px;
+	padding-right:2.5%;
+	margin-top:5px;
+	margin-bottom:0px;
+}
+
+h2 {
+	font-family:DINNextW01-CondensedLight, Tw Cen MT Condensed;
+	src:url('DIN Next W01 Condensed Light.ttf');
+	font-size:20px;
+	font-style:regular;
+	color:#212121;
+}
+
+h2.project {
+	font-family:DINNextW01-CondensedLight, Tw Cen MT Condensed;
+	src:url('DIN Next W01 Condensed Light.ttf');
+	font-size:90px;
+	font-style:regular;
+	color:#212121;
+	padding:10%;
+	padding-bottom:5%;
+}
+
+h3 {
+	font-family: Garamond; 
+	font-weight:bold;
+	font-size:30px;
+	font-style:italic;
+	color:white;
+	padding:0px;
+	padding-bottom:0px;
+	line-height: 1.45;
+	margin-top:5px;
+	margin-bottom:0px;
+}
+
+h3.black {
+	font-family: Garamond; 
+	font-weight:bold;
+	font-size:30px;
+	color:#212121;
+	font-style:italic;
+	padding:10%;
+	padding-bottom:10px;
+	word-wrap:break-word;
+	line-height: 1.45;
+}
+
+h3.blackpro {
+	font-family: Garamond; 
+	font-weight:bold;
+	font-size:30px;
+	color:#212121;
+	font-style:italic;
+	padding:10%;
+	padding-top:0px;
+	padding-bottom:0px;
+	word-wrap:break-word;
+	line-height: 1.45;
+}
+
+h4 {
+	font-family: Garamond; 
+	font-weight:bold;
+	font-size:25px;
+	color:white;
+	line-height:1.45;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+p.bodyblack {
+	font-family: Garamond; 
+	font-size:14pt; 
+	font-style:regular;
+	color:#212121;
+	margin:0px;
+	padding:10%;
+	padding-top:0px;
+	padding-right:40%;
+	max-width:50%
+	word-wrap:break-word;
+	line-height:1.45;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+p.bodypro {
+	font-family: Garamond; 
+	font-size:14pt; 
+	font-style:regular;
+	color:#212121;
+	margin:0px;
+	padding-left:10%;
+	padding-top:0px;
+	padding-right:40%;
+	padding-bottom:0px;
+	word-wrap:break-word;
+	line-height:1.45;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+p.bodybg {
+	font-family: Candara; 
+	font-size:30pt; 
+	font-style:bold;
+	color:#212121;
+	margin:0px;
+	padding-left:10%;
+	padding-top:0px;
+	padding-right:40%;
+	padding-bottom:0px;
+	word-wrap:break-word;
+	line-height:1.45;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+p.body {
+	font-family: Candara; 
+	font-size:14pt; 
+	font-style:regular;
+	color:white;
+	margin:0px;
+	padding:0px;
+	word-wrap: break-word;
+	line-height: 1.45;
+}
+
+ul.square {
+	list-style-type: square;
+	color:white;
+}
+
+.center {
+	background-color: #212121;
+    width: 100%;
+	position:relative;
+	left:0;
+	right:0;
+	bottom:0;
+	padding:10%;
+	padding-top:0px;
+	margin:0px;
+	line-height: 1.45;
+	display:block;
+}
+
+.bg
+{
+  width: 100%;
+  z-index: 0;
+}
+
+.pro1header {
+    background-image: url('img/img2.jpg');
+}
+
+/* Special Effects */
+
