@@ -22,6 +22,7 @@
 <img class="bg animated finite fadeIn" src="img/proj8head.jpg" width=100% height=auto>
 <!--Project name-->
 <h2 class="project">Fine particulate matter (PM2.5) Visualization</h2> 
+	<br><br><br><br><br>
 <!--Description-->
 <h3 class="blackpro">Executive Summary</h3>
 <p class="bodypro">
@@ -41,14 +42,14 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#Download then unzip</b><br>
-		if(!file.exists('fnei.zip')){<br>
-			download.file(url='https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip',destfile='fnei.zip')<br>
-			unzip('fnei.zip')<br>
-		}<br>
+			<span style="margin-left:1em">if(!file.exists('fnei.zip')){<br>
+			<span style="margin-left:1em">download.file(url='https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip',destfile='fnei.zip')<br>
+			<span style="margin-left:1em">unzip('fnei.zip')<br>
+			<span style="margin-left:1em">}<br>
 		<br>
 		<b>#Read</b><br>
-		NEI <- readRDS("summarySCC_PM25.rds")<br>
-		SCC <- readRDS("Source_Classification_Code.rds")
+			<span style="margin-left:1em">NEI <- readRDS("summarySCC_PM25.rds")<br>
+			<span style="margin-left:1em">SCC <- readRDS("Source_Classification_Code.rds")
 		</p>
 		</tr></td>
 	</table>
@@ -62,20 +63,20 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#Aggregate and name columns</b><br>
-		yearem <-aggregate(NEI$Emissions,by=list(NEI$year),sum)<br>
-		names(yearem)<-c('year','Emissions')<br>
+			<span style="margin-left:1em">yearem <-aggregate(NEI$Emissions,by=list(NEI$year),sum)<br>
+			<span style="margin-left:1em">names(yearem)<-c('year','Emissions')<br>
 		<br>
 		<b>#Plot</b><br>
-		plot(yearem$year,yearem$Emissions,type='l', xlab='year',<br>
-			 ylab='', main=~ PM[2.5] ~'Emissions (tons) from All Sources 1999-2008', <br>
-			 lwd=3, col='lightblue', axes=FALSE,cex.lab=0.7, cex.main=0.8)<br>
+			<span style="margin-left:1em">plot(yearem$year,yearem$Emissions,type='l', xlab='year',<br>
+			<span style="margin-left:1em">ylab='', main=~ PM[2.5] ~'Emissions (tons) from All Sources 1999-2008', <br>
+			<span style="margin-left:1em">lwd=3, col='lightblue', axes=FALSE,cex.lab=0.7, cex.main=0.8)<br>
 		<br>
 		<b>#Annotate</b><br>
-		text(yearem$year,yearem$Emissions,yearem$year,cex=0.5)<br>
+			<span style="margin-left:1em">text(yearem$year,yearem$Emissions,yearem$year,cex=0.5)<br>
 		<br>
 		<b>#Axis</b><br>
-		axis(1, at = seq(1999, 2008, by = 1), las=1, cex.axis=0.5, col='grey')<br>
-		axis(2, at = seq(3000000,7500000,by=500000), las=1, cex.axis=0.5, col='grey')
+			<span style="margin-left:1em">axis(1, at = seq(1999, 2008, by = 1), las=1, cex.axis=0.5, col='grey')<br>
+			<span style="margin-left:1em">axis(2, at = seq(3000000,7500000,by=500000), las=1, cex.axis=0.5, col='grey')
 		</p>
 		</tr></td>
 	</table>
@@ -89,21 +90,21 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#Aggregate and name columns</b><br>
-		balem <-aggregate(NEI$Emissions,by=list(NEI$year, NEI$fips=='24510'),sum)<br>
-		names(balem) <-c('year','Bal','Emissions')<br>
-		balem<-balem[balem$Bal==TRUE,]<br>
+			<span style="margin-left:1em">balem <-aggregate(NEI$Emissions,by=list(NEI$year, NEI$fips=='24510'),sum)<br>
+			<span style="margin-left:1em">names(balem) <-c('year','Bal','Emissions')<br>
+			<span style="margin-left:1em">balem<-balem[balem$Bal==TRUE,]<br>
 		<br>
 		<b>#Plot</b><br>
-		plot(balem$year,balem$Emissions,type='l', xlab='year',<br>
-			 ylab='', main=~ PM[2.5] ~'Emissions (tons) from All Sources 1999-2008 in Baltimore City',<br> 
-			 lwd=3, col='lightblue', axes=FALSE,cex.lab=0.7, cex.main=0.8)<br>
+			<span style="margin-left:1em">plot(balem$year,balem$Emissions,type='l', xlab='year',<br>
+			<span style="margin-left:1em">ylab='', main=~ PM[2.5] ~'Emissions (tons) from All Sources 1999-2008 in Baltimore City',<br> 
+			<span style="margin-left:1em">lwd=3, col='lightblue', axes=FALSE,cex.lab=0.7, cex.main=0.8)<br>
 		<br>
 		<b>#Annotate</b><br>
-		text(balem$year,balem$Emissions,balem$year,cex=0.5)<br>
+			<span style="margin-left:1em">text(balem$year,balem$Emissions,balem$year,cex=0.5)<br>
 		<br>
 		<b>#Axis</b><br>
-		axis(1, at = seq(1999, 2008, by = 1), las=1, cex.axis=0.5, col='grey')<br>
-		axis(2, at = seq(1500,3500,by=100), las=1, cex.axis=0.5, col='grey')
+			<span style="margin-left:1em">axis(1, at = seq(1999, 2008, by = 1), las=1, cex.axis=0.5, col='grey')<br>
+			<span style="margin-left:1em">axis(2, at = seq(1500,3500,by=100), las=1, cex.axis=0.5, col='grey')
 		</p>
 		</tr></td>
 	</table>
@@ -117,14 +118,14 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#Aggregate and name columns</b><br>
-		balem <-aggregate(NEI$Emissions,by=list(NEI$year, NEI$fips=='24510',NEI$type),sum)<br>
-		names(balem) <-c('year','Bal','type','Emissions')<br>
-		balem<-balem[balem$Bal==TRUE,]<br>
+			<span style="margin-left:1em">balem <-aggregate(NEI$Emissions,by=list(NEI$year, NEI$fips=='24510',NEI$type),sum)<br>
+			<span style="margin-left:1em">names(balem) <-c('year','Bal','type','Emissions')<br>
+			<span style="margin-left:1em">balem<-balem[balem$Bal==TRUE,]<br>
 		<br>
 		<b>#Plot</b><br>
-		library(ggplot2)<br>
-		qplot(year,Emissions,data=balem, geom=c('line','point'), color=type,<br> 
-			  main=~ PM[2.5] ~'Emissions from 1999–2008 for Baltimore City by Type', ylab='Emissions (tons)')<br>
+			<span style="margin-left:1em">library(ggplot2)<br>
+			<span style="margin-left:1em">qplot(year,Emissions,data=balem, geom=c('line','point'), color=type,<br> 
+			  <span style="margin-left:3em">main=~ PM[2.5] ~'Emissions from 1999–2008 for Baltimore City by Type', ylab='Emissions (tons)')<br>
 			 </p>
 		</tr></td>
 	</table>
@@ -139,18 +140,18 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#Get SCC for coal-related combustions</b><br>
-		i<-grep('Coal',SCC$EI.Sector,ignore.case = TRUE)<br>
-		index <-SCC[i,]$SCC<br>
+			<span style="margin-left:1em">i<-grep('Coal',SCC$EI.Sector,ignore.case = TRUE)<br>
+			<span style="margin-left:1em">index <-SCC[i,]$SCC<br>
 		<br>
 		<b>#Aggregate and name columns</b><br>
-		coalem <-aggregate(NEI$Emissions,by=list(NEI$year, NEI$SCC %in% index),sum)<br>
-		names(coalem) <-c('year','Coal','Emissions')<br>
-		coalem<-coalem[coalem$Coal==TRUE,]<br>
+			<span style="margin-left:1em">coalem <-aggregate(NEI$Emissions,by=list(NEI$year, NEI$SCC %in% index),sum)<br>
+			<span style="margin-left:1em">names(coalem) <-c('year','Coal','Emissions')<br>
+			<span style="margin-left:1em">coalem<-coalem[coalem$Coal==TRUE,]<br>
 		<br>
 		<b>#Plot</b><br>
-		library(ggplot2)<br>
-		qplot(year,Emissions,data=coalem, geom=c('line','point'),<br> 
-			  main=~ PM[2.5] ~'Emission from Coal Combustion-related Sources 1999-2008', ylab='Emissions (tons)')
+			<span style="margin-left:1em">library(ggplot2)<br>
+			<span style="margin-left:1em">qplot(year,Emissions,data=coalem, geom=c('line','point'),<br> 
+			<span style="margin-left:1em">main=~ PM[2.5] ~'Emission from Coal Combustion-related Sources 1999-2008', ylab='Emissions (tons)')
 		</p>
 		</tr></td>
 	</table>
@@ -170,10 +171,10 @@
 		motorem<-motorem[motorem$type==TRUE & motorem$Bal==TRUE,]<br>
 		<br>
 		<b>#Plot</b><br>
-		library(ggplot2)<br>
-		qplot(year,Emissions,data=motorem, geom=c('line','point'),<br> 
-			  main=~ PM[2.5] ~'Emission from Motor-related Sources 1999-2008 in Baltimore City',<br>
-			  ylab='Emissions (tons)')
+			<span style="margin-left:1em">library(ggplot2)<br>
+			<span style="margin-left:1em">qplot(year,Emissions,data=motorem, geom=c('line','point'),<br> 
+			  <span style="margin-left:3em">main=~ PM[2.5] ~'Emission from Motor-related Sources 1999-2008 in Baltimore City',<br>
+			  <span style="margin-left:3em">ylab='Emissions (tons)')
 		</p>
 		</tr></td>
 	</table>  
@@ -204,17 +205,17 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#Create changes variable with the baseline being Emissions in 1999 for both cities</b><br>
-		baseline<-motorem[motorem$year==1999,]<br>
-		motorem$baseline<-ifelse(motorem$fips=='24510',baseline[baseline$fips=='24510',4],<br>
-								 baseline[baseline$fips=='06037',4])<br>
-		motorem$changes<-motorem$Emissions/motorem$baseline<br>
+			<span style="margin-left:1em">baseline<-motorem[motorem$year==1999,]<br>
+			<span style="margin-left:1em">motorem$baseline<-ifelse(motorem$fips=='24510',baseline[baseline$fips=='24510',4],<br>
+									<span style="margin-left:3em">baseline[baseline$fips=='06037',4])<br>
+		<span style="margin-left:1em">motorem$changes<-motorem$Emissions/motorem$baseline<br>
 		<br>
 		<b>#Plot</b><br>
-		library(ggplot2)<br>
-		qplot(year,changes,data=motorem, geom=c('line','point'),<br> 
-			  main='Changes in Emission from Motor-related Sources 1999-2008 <br>
-			  Baltimore City vs LA County',<br>
-			  color=city, ylab='Changes in Emissions (Emissions in 1999 =1)')<br>
+			<span style="margin-left:1em">library(ggplot2)<br>
+			<span style="margin-left:1em">qplot(year,changes,data=motorem, geom=c('line','point'),<br> 
+			  <span style="margin-left:3em">main='Changes in Emission from Motor-related Sources 1999-2008 <br>
+			  <span style="margin-left:3em">Baltimore City vs LA County',<br>
+			  <span style="margin-left:3em">color=city, ylab='Changes in Emissions (Emissions in 1999 =1)')<br>
 		</p>
 		</tr></td>
 	</table>
