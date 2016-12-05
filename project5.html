@@ -1,0 +1,523 @@
+<!--DOC Type html-->
+<html>
+<head>
+	<meta charset=utf-8>
+	<title>BEAGLE & BEAR | How to Beat The Thai Market With Value Investing</title>
+	<!--Tab icon-->
+	<link rel="shortcut icon" type="image/png" href="img/favicon.png" />
+	<link rel="stylesheet" href="css/animate.css">
+	<link rel = "stylesheet" href = "css/bootstrap.min.css">
+	<link rel = "stylesheet" href = "css/bootstrap-theme.min.css">
+	<!--My CSS style must be the last to override bootstrap style-->
+	<link rel = "stylesheet" href = "css/style.css">
+	<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<head>
+<!--Project header-->
+<a href="index.html">
+	<h1 class="project" align="right">BEAGLE & BEAR</h1><br>
+</a>
+<p id="subtitlepro" align="right">Sample project</p>
+<body style="margin:0;">
+<img class="bg animated finite fadeIn" src="img/proj5head.jpg" width=100% height=auto>
+<!--Project name-->
+<h2 class="project">How to Beat The Thai Market With Value Investing</h2> 
+<!--Description-->
+<h3 class="blackpro">1 Executive Summary</h3>
+<br>
+<p class="bodypro">
+	We set out to find whether value investing strategy such as Joel Greenblatt's earning yields and Piotroski's F-score can 
+	actually beat the Thai stock market. The fundamental data are obtained from Morningstar while the benchmark SET TRI is 
+	obtained from Stock Exchange of Thailand. We perform support vector machine, boosted logistic regression and random forest 
+	classification based on the data, as well as a backtest to verify the models. Most our models perform better than a coin toss 
+	with random forest achieving the highest accuracy and sensitivity of 85.13% and 79.25% respectively (20.08% annual return).
+</p>
+<br><br>
+<h3 class="blackpro">2 Data Processing</h3>
+	<p class="bodypro">
+		Attach necessary R packages and set seed for reproduciblity.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		<b>#plotting</b><br>
+		library(ggplot2)<br>
+		library(gridExtra)<br>
+		#For caret package<br>
+		library(lattice)<br>
+		library(caret)<br>
+		<b>#For svm</b><br>
+		library(e1071)<br>
+		<b>#For gbm</b><br>
+		library(gbm)<br>
+		library(survival)<br>
+		library(splines)<br>
+		library(parallel)<br>
+		library(plyr)<br>
+		#For rf<br>
+		library(randomForest)<br>
+		<b>#For nnet</b><br>
+		library(neuralnet)<br>
+		#Set seed for reproducibility<br>
+		set.seed(385)<br>
+		</p>
+		</tr></td>
+	</table>
+	<br>
+	<p class="bodypro">	
+		Read and subset the data containing valuation ratios, valuation and quality indicators, common size ratios, and per share data. 
+		These variables are the go-to components of various value investing strategies such as Joel Greenblatt’s Magic Numbers, 
+		Peter Lynch’s fair value, Piotroski F-score, and other fundamental criteria. For more information on variables included, see the codebook. 
+		We only get those with complete cases due to requirement of the analysis.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		<b>#Read dataset</b><br>
+		udf<-read.csv('udf.csv')<br>
+		<br>
+		<b>#Subset data for analysis</b><br>
+		dat<-udf[,c(2,3,116:152,155:184,187:189)]<br>
+		<br>
+		<b>#Get only with complete cases</b><br>
+		dat<-dat[complete.cases(dat),]<br>
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">
+		The price growth variable priceg is skewed to the right; that is, we tend to have extreme positive price growth as large as 2,733%. 
+		Since events outside the scope of value investing strategies, such as transitioning from one industry to another, merger and 
+		acquisition or even share splitting mistakes, might cause these extreme values, we decide to remove outliers beyond median plus/minus 
+		three standard deviations (12 observations were removed).
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		<b>#Central values with outliers</b><br>
+		med<-median(dat$priceg)<br>
+		upper <-med+sd(dat$priceg)*3<br>
+		lower <-med-sd(dat$priceg)*3<br>
+		<br>
+		<b>#Plot with outliers</b><br>
+		g<-ggplot(dat,aes(x=priceg))+geom_density()+xlab('priceg with Outliers, median and 3SD')<br>
+		g<-g+geom_vline(aes(xintercept=mean(priceg, na.rm=T)),color="red") #add median<br>
+		g<-g+geom_vline(aes(xintercept=upper),color="blue") #add upper<br>
+		g<-g+geom_vline(aes(xintercept=lower),color="blue") #add upper<br>
+		<br>
+		<b>#Remove outliers</b><br>
+		dat<-dat[dat$priceg>lower&dat$priceg<upper,]<br><br>
+		<b>#Central values without outliers</b><br>
+		med<-median(dat$priceg)<br>
+		upper <-med+sd(dat$priceg)*3<br>
+		lower <-med-sd(dat$priceg)*3<br>
+		<br>
+		<b>#Plot without outliers</b><br>
+		h<-ggplot(dat,aes(x=priceg))+geom_density()+xlab('priceg without Outliers, median and 3SD')<br>
+		h<-h+geom_vline(aes(xintercept=mean(priceg, na.rm=T)),color="red") #add median<br>
+		h<-h+geom_vline(aes(xintercept=upper),color="blue") #add upper<br>
+		h<-h+geom_vline(aes(xintercept=lower),color="blue") #add upper<br>
+		<br>
+		<b>#Plot both</b><br>
+		grid.arrange(g,h,ncol=1)<br>
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">	
+		We create the winloss variable as a binary dependent variable of if the stock win or lose against the market.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		<b>#Create winloss variable as dependent</b><br>
+		dat$winloss <- ifelse(dat$priceg-dat$set_return>0,'win','lose')<br>
+	</table></p>
+		</tr></td>
+	</table>
+	<p class="bodypro">
+		This result in a dataset of 73 variables and 1,580 observations.
+		<br>
+		<img src="img/pro5_1.png" width="100% of window" height=auto>
+	</p>
+	<br><br>
+<h3 class="blackpro">3 Exploratory Data Analysis</h3>
+	<p class="bodypro">	
+		We treat observations as cross-sectional rather than panel data. This makes our learners perform screening similar 
+		to what value investing strategies do based on one-year windows of annual data. The merit is that we can rely on powerful 
+		predicting algorithms such as random forest, but the downside is that we must assume random effects of year and individual 
+		stocks. We can see the data is fairly distributed by years and stock symbols.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		<b>#Year spread</b><br>
+		g<-ggplot(dat, aes(x=i,fill=winloss))+geom_histogram()
+		g<-g+xlab('Years')+ylab('Stock Count')+scale_fill_discrete(name="Win or Lose\nAgainst SET TRI")<br>
+		<br>
+		<b>#Symbol spread</b><br>
+		h<-ggplot(dat, aes(x=symbol,fill=winloss))+stat_count()<br>
+		h<-h+xlab('Stock Symbols')+ylab('Stock Count')+scale_fill_discrete(name="Win or Lose\nAgainst SET TRI")<br>
+		h<-h+scale_x_discrete(breaks=NULL) #hide x ticks<br>
+		<b>#Plot both</b><br>
+		grid.arrange(g,h,ncol=1)<br>
+	</p>
+		</tr></td>
+	</table>
+	<br>
+	<p class="bodypro">
+		<img src="img/pro5_2.png" width="100% of window" height=auto>
+	</p>
+	<br><br>
+<h3 class="blackpro">4 Modeling</h3>
+	<p class="bodypro">	
+		We prepare randomly training and testing sets at 60/40 ratio. This results in 948 observations in training set and 632 observations in  
+		testing set. We also removed variables associated with year indicator, symbols, SET TRI return and price growth since it interferes 
+		with the training. The models used are support vector machine, boosted logistic regression, random forest and neural networks. Also 
+		leave  backtest data frame for backtesting.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		<b>#Leave a dataset for backtesting</b><br>
+		backtest<-dat<br>
+		<br>
+		<b>#Remove all unnecessary variables for training</b><br>
+		dat<-subset(dat,select=-c(i,symbol,set_return,priceg))<br>
+		<br>
+		<b>#Create training and testing sets</b><br>
+		inTrain <- createDataPartition(dat$winloss,p=0.6,list=FALSE)<br>
+		training<-dat[inTrain,]<br>
+		testing<-dat[-inTrain,]<br>
+		backtest<-backtest[-inTrain,]<br>
+		</p>
+		</tr></td>
+	</table>
+	<br><br>
+<h3 class="blackpro">4.1 Support Vector Machine</h3>
+	<p class="bodypro">
+		We use c-classification support vector machine with linear kernel and gamma of 1/68.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		fit<-svm(winloss~.,data=training, type='C',kernel='linear')
+		Testing reveals out-of-sample 64.72% accuracy. We also get 64.14% out-of-sample precision, meaning 64.14% of 
+		stocks we labelled as market beaters are actually so.
+		<br><br>
+		pred<-predict(fit,newdata=testing)<br>
+		confusionMatrix(pred,testing$winloss,positive = 'win')<br>
+		## Confusion Matrix and Statistics<br>
+		## 
+		##           Reference<br>
+		## Prediction lose win<br>
+		##       lose  248 133<br>
+		##       win    90 161<br>
+		##                                           
+		##                Accuracy : 0.6472 <br>         
+		##                  95% CI : (0.6085, 0.6844)<br>
+		##     No Information Rate : 0.5348       <br>   
+		##     P-Value [Acc > NIR] : 6.937e-09  <br>     
+		##                                           
+		##                   Kappa : 0.2841<br>          
+		##  Mcnemar's Test P-Value : 0.004915<br>       
+		##                                           
+		##             Sensitivity : 0.5476<br>          
+		##             Specificity : 0.7337<br>         
+		##          Pos Pred Value : 0.6414<br>          
+		##          Neg Pred Value : 0.6509<br>          
+		##              Prevalence : 0.4652<br>          
+		##          Detection Rate : 0.2547<br>          
+		##    Detection Prevalence : 0.3972<br>          
+		##       Balanced Accuracy : 0.6407<br>          
+		##      <br>                                   
+		##        'Positive' Class : win<br>             
+		## 		<br>
+		</p>
+		</tr></td>
+	</table>
+	<br>
+	<p class="bodypro">
+		Following this classifier will give an average return (%) of:<br>
+	</p>	
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		mean(backtest[backtest$winloss==pred & pred=='win',]$priceg)<br>
+		## [1] 65.59239<br>
+		</p>
+		</tr></td>
+	</table>
+	<br><br>
+<h3 class="blackpro">4.2 Boosted Logistic Regression</h3>
+	<p class="bodypro">
+		The boosted logit with 150 iterations and step-size reduction of 0.1 with 25 repetitions of bootstrap cross-validation.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		fit<-train(winloss~.,data=training, method='gbm')
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">
+		64 out of 68 features have an influence on the dependent variable. The variable importance of top-ten most influential variables are shown below.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		ggplot(varImp(fit),top=10)
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">
+		<br>
+		<img src="img/pro5_3.png" width="100% of window" height=auto>
+		<br>
+		This gives a slightly inferior out-of-sample accuracy of 63.13% and a little better precision of 65.64% respectively.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		pred<-predict(fit,newdata=testing)<br>
+		confusionMatrix(pred,testing$winloss,positive = 'win')<br>
+		## Confusion Matrix and Statistics<br>
+		## <br>
+		##           Reference<br>
+		## Prediction lose win<br>
+		##       lose  271 166<br>
+		##       win    67 128<br>
+		## <br>                                         
+		##                Accuracy : 0.6313 <br>        
+		##                  95% CI : (0.5924, 0.669)<br>
+		##     No Information Rate : 0.5348 <br>        
+		##     P-Value [Acc > NIR] : 5.855e-07<br>      
+		##                                          
+		##                   Kappa : 0.2425 <br>        
+		##  Mcnemar's Test P-Value : 1.361e-10<br>      
+		## <br>                                         
+		##             Sensitivity : 0.4354 <br>        
+		##             Specificity : 0.8018 <br>        
+		##          Pos Pred Value : 0.6564 <br>        
+		##          Neg Pred Value : 0.6201 <br>        
+		##              Prevalence : 0.4652 <br>        
+		##          Detection Rate : 0.2025 <br>        
+		##    Detection Prevalence : 0.3085 <br>        
+		##       Balanced Accuracy : 0.6186 <br>        
+		## <br>                                         
+		##        'Positive' Class : win <br>           
+		## <br> 
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">
+		Following this classifier will give an average return (%) of:
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		mean(backtest[backtest$winloss==pred & pred=='win',]$priceg)<br>
+		## [1] 65.73453
+		</p>
+		</tr></td>
+	</table>
+	<br><br>
+<h3 class="blackpro">4.3 Random Forest Classification</h3>
+	<p class="bodypro">
+		We grow 500 classification trees with 25 repetitions of bootstrap cross-validation. The cutoff for voting is 50%.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		fit<-train(winloss~.,data=training, method='rf')
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">	
+		The variable importance of top-ten most influential variables are shown below.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		ggplot(varImp(fit),top=10)
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">
+		<br>
+		<img src="img/pro5_4.png" width="100% of window" height=auto>
+		<br>
+		This gives the best result so far with 85.13% accuracy and 87.59% precision.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		pred<-predict(fit,newdata=testing)<br>
+		confusionMatrix(pred,testing$winloss,positive = 'win')<br>
+		## Confusion Matrix and Statistics<br>
+		## <br>
+		##           Reference<br>
+		## Prediction lose win<br>
+		##       lose  305  61<br>
+		##       win    33 233<br>
+		## <br>                                          
+		##                Accuracy : 0.8513<br>          
+		##                  95% CI : (0.8211, 0.8781)<br>
+		##     No Information Rate : 0.5348<br>          
+		##     P-Value [Acc > NIR] : < 2.2e-16<br>       
+		## <br>                                          
+		##                   Kappa : 0.6992<br>          
+		##  Mcnemar's Test P-Value : 0.005355<br>        
+		## <br>                                          
+		##             Sensitivity : 0.7925<br>          
+		##             Specificity : 0.9024<br>          
+		##          Pos Pred Value : 0.8759<br>          
+		##          Neg Pred Value : 0.8333<br>          
+		##              Prevalence : 0.4652<br>          
+		##          Detection Rate : 0.3687<br>          
+		##    Detection Prevalence : 0.4209<br>          
+		##       Balanced Accuracy : 0.8474<br>          
+		## <br>                                           
+		##        'Positive' Class : win<br>             
+		## <br>
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">
+		Following this classifier will give an average return (%) of:
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		mean(backtest[backtest$winloss==pred & pred=='win',]$priceg)<br>
+		## [1] 58.05055
+		</p>
+		</tr></td>
+	</table>
+	<br><br>
+<h3 class="blackpro">4.4 Neural Networks</h3>
+	<p class="bodypro">
+		The winloss variable has to be converted to 1 (win) and 0 (lose) for the training and testing sets. Formula is 
+		created using all variables in the training set.
+	<p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		training$winloss<-ifelse(training$winloss=='win',1,0)<br>
+		testing$winloss<-ifelse(testing$winloss=='win',1,0)<br>
+		<br>
+		#Create formula<br>
+		#Covariates<br>
+		covariate<-colnames(training[-69])<br>
+		covariate<-paste(covariate,collapse='+')<br>
+		#Dependent<br>
+		dependent<-colnames(training[69])<br>
+		#Join<br>
+		fol <- paste(dependent,covariate,sep='~')<br>
+		fol<-as.formula(fol)<br>
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">
+		We use 2 hidden layers with 7 neurons each layer. This is derived by the rule of thump of  no.of samples in 
+		training set/2*(degree of freedom). The threshold is 0.01, training for 8 times. The algorithm is resilient backpropagation 
+		with weight backtracking.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		fit<-neuralnet(fol,data=training,hidden=c(7,7),rep=10)<br>
+		## Warning: algorithm did not converge in 1 of 10 repetition(s) within the<br>
+		## stepmax<br>
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">
+		The plot below shows our neural network.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		plot.nn(fit,rep='best')
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">
+		<br>
+		<img src="img/pro5_3.png" width="100% of window" height=auto>
+		<br>
+		This gives the accuracy of 51.11% and precision of 47.19%. This is considerably worse than other learners.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		covariate_df <-testing[-69]<br>
+		comp<-compute(fit,covariate_df,rep=8)<br>
+		comp<-unlist(comp$net.result)<br>
+		pred<-ifelse(comp>0.5,1,0)<br>
+		confusionMatrix(pred,testing$winloss,positive='1')<br>
+		## Confusion Matrix and Statistics<br>
+		## <br>
+		##           Reference<br>
+		## Prediction   0   1<br>
+		##          0 197 168<br>
+		##          1 141 126<br>
+		## <br>                                          
+		##                Accuracy : 0.5111<br>          
+		##                  95% CI : (0.4713, 0.5507)<br>
+		##     No Information Rate : 0.5348<br>          
+		##     P-Value [Acc > NIR] : 0.8917<br>         
+		## <br>                                          
+		##                   Kappa : 0.0115<br>          
+		##  Mcnemar's Test P-Value : 0.1391<br>          
+		## <br>                                          
+		##             Sensitivity : 0.4286<br>          
+		##             Specificity : 0.5828<br>          
+		##          Pos Pred Value : 0.4719<br>          
+		##          Neg Pred Value : 0.5397<br>          
+		##              Prevalence : 0.4652<br>          
+		##          Detection Rate : 0.1994<br>          
+		##    Detection Prevalence : 0.4225<br>          
+		##       Balanced Accuracy : 0.5057<br>          
+		## <br>                                          
+		##        'Positive' Class : 1<br>               
+		## <br>
+		</p>
+		</tr></td>
+	</table>
+	<p class="bodypro">
+		Following this classifier will give an average return (%) of:
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		pred<-ifelse(pred==1,'win','lose')<br>
+		mean(backtest[backtest$winloss==pred & pred=='win',]$priceg)<br>
+		## [1] 61.78413<br>
+		</p>
+		</tr></td>
+	</table>
+	<br><br>
+<h3 class="blackpro">5 Conclusion</h3>
+<p class="bodypro">
+	All our models has a better than random accuracy and precision. They are also shown to perform reasonably in 
+	the backtest (65.59%, 65.73%, 58.05% and 61.78% respectively). Random forest has the highest accuracy and precision; 
+	nonetheless it performs worse than other learners in the backtest. This is because our models have several 
+	limitations: <br><br>
+
+	We predict if a stock ‘beats the market’ but not ‘by how much’ so the discrepancy in accuracy/precision and backtest 
+	performances between random forest and svm. <br><br>
+
+	We assume random effects among years and stocks and treat which might not necessarily hold. <br><br>
+	
+	We treat the dataset as cross-sectional not panel as it naturally is. <br><br>
+
+	We exclude some data because of NAs. <br><br>
+
+	One of the most noteworthy point is that according to variable importance, traditional value 
+	strategy indicators such as Joel Greenblatt’s earning yields and Piotroski’s F-score appear to be 
+	significant. Value investing does make sense in Thai market. <br><br>
+<br>
+<a href="index.html">
+	<h1 class="project" align="center">BACK</h1><br>
+</a>
+</body>
+</html>
