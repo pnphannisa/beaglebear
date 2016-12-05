@@ -1,3 +1,10 @@
+/*External Font*/
+@font-face {
+  font-family: "DINNextW01-CondensedLight";
+  src: url('../fonts/DIN.ttf') format('truetype');
+}
+
+/*Writing style*/
 #subtitle {
 	font-family: Garamond; 
 	font-size:20px;
@@ -50,7 +57,6 @@ h1.project {
 
 h2 {
 	font-family:DINNextW01-CondensedLight, Tw Cen MT Condensed;
-	src:url('DIN Next W01 Condensed Light.ttf');
 	font-size:20px;
 	font-style:regular;
 	color:#212121;
@@ -58,7 +64,6 @@ h2 {
 
 h2.project {
 	font-family:DINNextW01-CondensedLight, Tw Cen MT Condensed;
-	src:url('DIN Next W01 Condensed Light.ttf');
 	font-size:90px;
 	font-style:regular;
 	color:#212121;
@@ -173,6 +178,10 @@ p.body {
 	line-height: 1.45;
 }
 
+p.DIN {
+	font-family:DINNextW01-CondensedLight;
+}
+
 ul.square {
 	list-style-type: square;
 	color:white;
@@ -202,5 +211,28 @@ ul.square {
     background-image: url('img/img2.jpg');
 }
 
-/* Special Effects */
+/* Tables */
 
+table,th,td {
+   border: 1px black dashed;
+   background-color: #cccccc;
+   width:50%;
+   padding-left: 10%;
+   margin-left:10%;
+   margin-right:40%;
+}
+
+p.bodytable {
+	font-family: Garamond; 
+	font-size:12pt; 
+	font-style:italic;
+	color:#464646;
+	margin:0px;
+	word-wrap:break-word;
+	line-height:1.45;
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+/*Tab Spaces*/
+p.indent{ padding-left: 1.8em }

@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset=utf-8>
-	<title>BEAGLE & BEAR | Too Drunk To Drive? An Infographic of Drunk Driving</title>
+	<title>BEAGLE & BEAR | Swiftkey Next Word</title>
 	<!--Tab icon-->
 	<link rel="shortcut icon" type="image/png" href="img/favicon.png" />
 	<link rel="stylesheet" href="css/animate.css">
@@ -21,11 +21,85 @@
 <body style="margin:0;">
 <img class="bg animated finite fadeIn" src="img/proj4head.jpg" width=100% height=auto>
 <!--Project name-->
-<h2 class="project">Too Drunk To Drive? An Infographic of Drunk Driving</h2>
+<h2 class="project">Swiftkey Next Word</h2> 
 <!--Description-->
 <p class="bodypro">
-	<img src="img/pro4_1.jpg" width=700px height=auto>
+	Quad-gram Backoff Next Word Prediction Model with Modified Kneser-Ney Smoothing
+	<img src="img/pro4_1.png" width="100% of window" height=auto>
 </p>
+<br>
+<br>
+<h3 class="blackpro">Executive Summary</h3>
+	<p class="bodypro">
+	The app uses a quad-gram back-off model with modified Kneser-Ney smoothing to predict the next word of a sentence.
+	The alorithm learns from 1% of the Coursera SwiftKey data.
+	It requires only 5 ms per query to run on average with a total of 41.3 MB of database.
+	Benchmark using Jan-san's implementation results in 14.31% overall top-3 score as compared to the baseline of 6.64%.<br>
+	<br>
+	The app is hosted <a href="https://cstorm125.shinyapps.io/swiftkey/" target="_blank">here</a>. 
+	The GitHub repository is <a href="https://github.com/cstorm125/swiftkey" target="_blank">here</a>.<br>
+	<br>
+	Simply enter a word into the text box; predictions, modified Kneser-Ney probabilities and word clouds will appear.
+	</p>
+	<br>
+	<br>
+<h3 class="blackpro">Modified Kneser-Ney Smoothing</h3>
+	<p class="bodypro">
+	Creates a probability for a given n-gram based on its context interpolated with lower-level n-grams. It is considered by many to be the most effective 
+	smoothing algorithm in n-gram models. <br>
+	Example: The word 'DeNiro' will have a rather high word frequency on its own. However, almost the only context it appears in is with 'Robert'; thus, 
+	we can assume that it is actually much 'less frequent'.
+	Chen and Goodman (1998) devised modified Kneser-Ney smoothing to take this into account.
+	An improvement from Kneser-Ney smoothing, modified Kneser-Ney smoothing use different discount weights according to frequencies of frequencies of words 
+	to achieve more accurate results.
+	</p>
+	<br>
+	<br>
+<h3 class="blackpro">Backoff Model</h3>
+	<p class="bodypro">
+	The backoff model is a Markov-chain based model where the highest-order n-grams (in our case quad-grams) are used first to determine the next word. If there 
+	is no match, the lower-order n-grams are used ending with uni-grams, effectively selecting the single word with the highest probability in the corpus.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		<b>user/system/elapsed</b><br>
+		0.754/0.018/0.774 
+		</p>
+		</tr></td>
+	</table>
+	<br>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		<b>pred/pkn/ngram</b><br>
+		1:most/ 0.11220957/     4<br>
+		2:best/ 0.08201405/     4<br>
+		3:first/ 0.03617392/     4<br>
+		4:worst/ 0.02200244/     4<br>
+		5:biggest/ 0.01932833/     4<br>
+		</p>
+		</tr></td>
+	</table>
+	<br>
+	<br>
+<h3 class="blackpro">Benchmarking</h3>
+	<p class="bodypro">
+	Below is the benchmarking results using Jan-san's implementation. The numbers in parantheses are those of baseline predictions.
+	</p>
+	<table>
+		<tr><td>
+		<p class="bodytable">
+		<b>Overall top-3 score:</b>       14.31 % (6.64 %)<br>
+		<b>Overall top-1 precision:</b>   10.23 % (5.42 %)<br>
+		<b>Overall top-3 precision:</b>   17.82 % (8.11 %)<br>
+		<br>
+		<b>Average runtime:</b>           5.00 msec (0.09 msec)<br>
+		<b>Number of predictions:</b>     28464<br>
+		<b>Total memory used:</b>      	  704.73 MB (286.76 MB)<br>
+		</p>
+		</tr></td>
+	</table>
 <br>
 <a href="index.html">
 	<h1 class="project" align="center">BACK</h1><br>
