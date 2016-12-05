@@ -68,7 +68,16 @@ h2.project {
 	font-style:regular;
 	color:#212121;
 	padding:10%;
-	padding-bottom:5%;
+	padding-bottom:0%;
+}
+
+h2.projectw {
+	font-family:DINNextW01-CondensedLight, Tw Cen MT Condensed;
+	font-size:90px;
+	font-style:regular;
+	color:#ffffff;
+	padding:0px;
+	padding-bottom:0px;
 }
 
 h3 {

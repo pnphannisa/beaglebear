@@ -22,6 +22,7 @@
 <img class="bg animated finite fadeIn" src="img/proj5head.jpg" width=100% height=auto>
 <!--Project name-->
 <h2 class="project">How to Beat The Thai Market With Value Investing</h2> 
+	<br><br><br><br><br>
 <!--Description-->
 <h3 class="blackpro">1 Executive Summary</h3>
 <br>
@@ -41,25 +42,25 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#plotting</b><br>
-		library(ggplot2)<br>
-		library(gridExtra)<br>
-		#For caret package<br>
-		library(lattice)<br>
-		library(caret)<br>
+			<span style="margin-left:1em">library(ggplot2)<br>
+			<span style="margin-left:1em">library(gridExtra)<br>
+		<b>#For caret package</b><br>
+			<span style="margin-left:1em">library(lattice)<br>
+			<span style="margin-left:1em">library(caret)<br>
 		<b>#For svm</b><br>
-		library(e1071)<br>
+			<span style="margin-left:1em">library(e1071)<br>
 		<b>#For gbm</b><br>
-		library(gbm)<br>
-		library(survival)<br>
-		library(splines)<br>
-		library(parallel)<br>
-		library(plyr)<br>
-		#For rf<br>
-		library(randomForest)<br>
+			<span style="margin-left:1em">library(gbm)<br>
+			<span style="margin-left:1em">library(survival)<br>
+			<span style="margin-left:1em">library(splines)<br>
+			<span style="margin-left:1em">library(parallel)<br>
+			<span style="margin-left:1em">library(plyr)<br>
+		<b>#For rf</b><br>
+			<span style="margin-left:1em">library(randomForest)<br>
 		<b>#For nnet</b><br>
-		library(neuralnet)<br>
-		#Set seed for reproducibility<br>
-		set.seed(385)<br>
+			<span style="margin-left:1em">library(neuralnet)<br>
+		<b>#Set seed for reproducibility</b><br>
+			<span style="margin-left:1em">set.seed(385)<br>
 		</p>
 		</tr></td>
 	</table>
@@ -74,13 +75,13 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#Read dataset</b><br>
-		udf<-read.csv('udf.csv')<br>
+			<span style="margin-left:1em">udf<-read.csv('udf.csv')<br>
 		<br>
 		<b>#Subset data for analysis</b><br>
-		dat<-udf[,c(2,3,116:152,155:184,187:189)]<br>
+			<span style="margin-left:1em">dat<-udf[,c(2,3,116:152,155:184,187:189)]<br>
 		<br>
 		<b>#Get only with complete cases</b><br>
-		dat<-dat[complete.cases(dat),]<br>
+			<span style="margin-left:1em">dat<-dat[complete.cases(dat),]<br>
 		</p>
 		</tr></td>
 	</table>
@@ -94,31 +95,31 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#Central values with outliers</b><br>
-		med<-median(dat$priceg)<br>
-		upper <-med+sd(dat$priceg)*3<br>
-		lower <-med-sd(dat$priceg)*3<br>
+			<span style="margin-left:1em">med<-median(dat$priceg)<br>
+			<span style="margin-left:1em">upper <-med+sd(dat$priceg)*3<br>
+			<span style="margin-left:1em">lower <-med-sd(dat$priceg)*3<br>
 		<br>
 		<b>#Plot with outliers</b><br>
-		g<-ggplot(dat,aes(x=priceg))+geom_density()+xlab('priceg with Outliers, median and 3SD')<br>
-		g<-g+geom_vline(aes(xintercept=mean(priceg, na.rm=T)),color="red") #add median<br>
-		g<-g+geom_vline(aes(xintercept=upper),color="blue") #add upper<br>
-		g<-g+geom_vline(aes(xintercept=lower),color="blue") #add upper<br>
+			<span style="margin-left:1em">g<-ggplot(dat,aes(x=priceg))+geom_density()+xlab('priceg with Outliers, median and 3SD')<br>
+			<span style="margin-left:1em">g<-g+geom_vline(aes(xintercept=mean(priceg, na.rm=T)),color="red") #add median<br>
+			<span style="margin-left:1em">g<-g+geom_vline(aes(xintercept=upper),color="blue") #add upper<br>
+			<span style="margin-left:1em">g<-g+geom_vline(aes(xintercept=lower),color="blue") #add upper<br>
 		<br>
 		<b>#Remove outliers</b><br>
-		dat<-dat[dat$priceg>lower&dat$priceg<upper,]<br><br>
+			<span style="margin-left:1em">dat<-dat[dat$priceg>lower&dat$priceg<upper,]<br><br>
 		<b>#Central values without outliers</b><br>
-		med<-median(dat$priceg)<br>
-		upper <-med+sd(dat$priceg)*3<br>
-		lower <-med-sd(dat$priceg)*3<br>
+			<span style="margin-left:1em">med<-median(dat$priceg)<br>
+			<span style="margin-left:1em">upper <-med+sd(dat$priceg)*3<br>
+			<span style="margin-left:1em">lower <-med-sd(dat$priceg)*3<br>
 		<br>
 		<b>#Plot without outliers</b><br>
-		h<-ggplot(dat,aes(x=priceg))+geom_density()+xlab('priceg without Outliers, median and 3SD')<br>
-		h<-h+geom_vline(aes(xintercept=mean(priceg, na.rm=T)),color="red") #add median<br>
-		h<-h+geom_vline(aes(xintercept=upper),color="blue") #add upper<br>
-		h<-h+geom_vline(aes(xintercept=lower),color="blue") #add upper<br>
+			<span style="margin-left:1em">h<-ggplot(dat,aes(x=priceg))+geom_density()+xlab('priceg without Outliers, median and 3SD')<br>
+			<span style="margin-left:1em">h<-h+geom_vline(aes(xintercept=mean(priceg, na.rm=T)),color="red") #add median<br>
+			<span style="margin-left:1em">h<-h+geom_vline(aes(xintercept=upper),color="blue") #add upper<br>
+			<span style="margin-left:1em">h<-h+geom_vline(aes(xintercept=lower),color="blue") #add upper<br>
 		<br>
 		<b>#Plot both</b><br>
-		grid.arrange(g,h,ncol=1)<br>
+			<span style="margin-left:1em">grid.arrange(g,h,ncol=1)<br>
 		</p>
 		</tr></td>
 	</table>
@@ -129,7 +130,7 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#Create winloss variable as dependent</b><br>
-		dat$winloss <- ifelse(dat$priceg-dat$set_return>0,'win','lose')<br>
+			<span style="margin-left:1em">dat$winloss <- ifelse(dat$priceg-dat$set_return>0,'win','lose')<br>
 	</table></p>
 		</tr></td>
 	</table>
@@ -150,15 +151,15 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#Year spread</b><br>
-		g<-ggplot(dat, aes(x=i,fill=winloss))+geom_histogram()
-		g<-g+xlab('Years')+ylab('Stock Count')+scale_fill_discrete(name="Win or Lose\nAgainst SET TRI")<br>
+			<span style="margin-left:1em">g<-ggplot(dat, aes(x=i,fill=winloss))+geom_histogram()
+			<span style="margin-left:1em">g<-g+xlab('Years')+ylab('Stock Count')+scale_fill_discrete(name="Win or Lose\nAgainst SET TRI")<br>
 		<br>
 		<b>#Symbol spread</b><br>
-		h<-ggplot(dat, aes(x=symbol,fill=winloss))+stat_count()<br>
-		h<-h+xlab('Stock Symbols')+ylab('Stock Count')+scale_fill_discrete(name="Win or Lose\nAgainst SET TRI")<br>
-		h<-h+scale_x_discrete(breaks=NULL) #hide x ticks<br>
+			<span style="margin-left:1em">h<-ggplot(dat, aes(x=symbol,fill=winloss))+stat_count()<br>
+			<span style="margin-left:1em">h<-h+xlab('Stock Symbols')+ylab('Stock Count')+scale_fill_discrete(name="Win or Lose\nAgainst SET TRI")<br>
+			<span style="margin-left:1em">h<-h+scale_x_discrete(breaks=NULL) #hide x ticks<br>
 		<b>#Plot both</b><br>
-		grid.arrange(g,h,ncol=1)<br>
+			<span style="margin-left:1em">grid.arrange(g,h,ncol=1)<br>
 	</p>
 		</tr></td>
 	</table>
@@ -178,16 +179,16 @@
 		<tr><td>
 		<p class="bodytable">
 		<b>#Leave a dataset for backtesting</b><br>
-		backtest<-dat<br>
+			<span style="margin-left:1em">backtest<-dat<br>
 		<br>
 		<b>#Remove all unnecessary variables for training</b><br>
-		dat<-subset(dat,select=-c(i,symbol,set_return,priceg))<br>
+			<span style="margin-left:1em">dat<-subset(dat,select=-c(i,symbol,set_return,priceg))<br>
 		<br>
 		<b>#Create training and testing sets</b><br>
-		inTrain <- createDataPartition(dat$winloss,p=0.6,list=FALSE)<br>
-		training<-dat[inTrain,]<br>
-		testing<-dat[-inTrain,]<br>
-		backtest<-backtest[-inTrain,]<br>
+			<span style="margin-left:1em">inTrain <- createDataPartition(dat$winloss,p=0.6,list=FALSE)<br>
+			<span style="margin-left:1em">training<-dat[inTrain,]<br>
+			<span style="margin-left:1em">testing<-dat[-inTrain,]<br>
+			<span style="margin-left:1em">backtest<-backtest[-inTrain,]<br>
 		</p>
 		</tr></td>
 	</table>
@@ -200,9 +201,18 @@
 		<tr><td>
 		<p class="bodytable">
 		fit<-svm(winloss~.,data=training, type='C',kernel='linear')
-		Testing reveals out-of-sample 64.72% accuracy. We also get 64.14% out-of-sample precision, meaning 64.14% of 
-		stocks we labelled as market beaters are actually so.
-		<br><br>
+		</p>
+		</tr></td>
+	</table>
+	<br>
+	<p class="bodypro">
+	Testing reveals out-of-sample 64.72% accuracy. We also get 64.14% out-of-sample precision, meaning 64.14% of 
+	stocks we labelled as market beaters are actually so.
+	</p>
+	<br>
+	<table>
+		<tr><td>
+		<p class="bodytable">
 		pred<-predict(fit,newdata=testing)<br>
 		confusionMatrix(pred,testing$winloss,positive = 'win')<br>
 		## Confusion Matrix and Statistics<br>
